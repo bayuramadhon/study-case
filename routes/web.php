@@ -19,4 +19,8 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::get('/home', [App\Http\Controllers\BookController::class, 'index'])->name('book');
+Route::get('/home', [App\Http\Controllers\TransactionController::class, 'index'])->name('transaction');
+Route::get('/api/transactions', [App\Http\Controllers\TransactionController::class, 'api'])->name('transaction');
+
+
+Route::get('/transaction/create', [App\Http\Controllers\TransactionController::class, 'create']);
