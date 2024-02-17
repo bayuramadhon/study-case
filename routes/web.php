@@ -24,3 +24,4 @@ Route::get('/api/transactions', [App\Http\Controllers\TransactionController::cla
 
 
 Route::get('/transaction/create', [App\Http\Controllers\TransactionController::class, 'create']);
+Route::post('/transaction/store', [App\Http\Controllers\TransactionController::class, 'store']);

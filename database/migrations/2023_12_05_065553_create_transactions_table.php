@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('member_id');
             $table->date('date_start');
-            $table->date('dete_end');
+            $table->date('date_end');
             $table->boolean('status');
             $table->timestamps();
 

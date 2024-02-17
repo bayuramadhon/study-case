@@ -96,8 +96,6 @@
 <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.html5.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.print.min.js') }}"></script>
 <script src="{{ asset('assets/plugins/datatables-buttons/js/buttons.colVis.min.js') }}"></script>
-!-- date-range-picker -->
-<script src="{{ asset('assets/plugins/daterangepicker/daterangepicker.js') }}"></script>
 <script type="text/javascript">
     var actionUrl = '{{ url('transactions')}}';
     var apiUrl = '{{ url('api/transactions')}}';
