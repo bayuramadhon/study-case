@@ -7,6 +7,7 @@ use App\Models\Member;
 use App\Models\Transactions;
 use App\Models\TransactionDetail;
 use Illuminate\Http\Request;
+use DB;
 
 class TransactionController extends Controller
 {
@@ -54,31 +55,52 @@ class TransactionController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'date_start' => ['required'],
-            'date_end' => ['required'],
-            'name' => ['required'],
-            'lama_pinjam' => ['required'],
-            'total_buku' => ['required'],
-            'total_bayar' => ['required'],
-            'status' => ['required'],
-        ]);
+        // $this->validate($request, [
+        //     'date_start' => ['required'],
+        //     'date_end' => ['required'],
+        //     'name' => ['required'],
+        //     'lama_pinjam' => ['required'],
+        //     'total_buku' => ['required'],
+        //     'total_bayar' => ['required'],
+        //     'status' => ['required'],
+        // ]);
+        // dd($request);
 
-        DB::transaction(function () {
-            // create transaction
-            Transaction::create($request->all());
 
-            // create transaction detail
-            TransactionDetail::create(transaction - id);
+        DB::transaction(function () use ($request) {
+            $parts = explode(" - ", $request->reservation);
+            $date_start = $parts[0];
+            $date_end = $parts[1];
 
-            // update boook
+            $trx = new Transactions;
+            $trx->member_id = $request->member;
+            $trx->date_start = $date_start;
+            $trx->date_end = $date_end;
+            $trx->status = 0;
+            $trx->save();
 
-            DB::delete('delete from posts');
+
+            $trx_detail = new TransactionDetail;
+            $trx_detail->transaction_id = $trx->id;
+            $trx_detail->book_id = $request->book;
+            $trx_detail->qty = 1;
+            $trx_detail->save();
+
+            $book = Book::find($trx_detail->book_id);
+            $book->qty -= 1;
+            $book->save();
+
+            // // create transaction detail
+            // TransactionDetail::create(transaction - id);
+
+            // // update boook
+
+            // DB::delete('delete from posts');
         });
 
 
 
-        return redirect('transactions');
+        return redirect('home');
     }
 
     /**
