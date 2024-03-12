@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Transaction;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,3 +26,6 @@ Route::get('/api/transactions', [App\Http\Controllers\TransactionController::cla
 
 Route::get('/transaction/create', [App\Http\Controllers\TransactionController::class, 'create']);
 Route::post('/transaction/store', [App\Http\Controllers\TransactionController::class, 'store']);
+Route::get('/transaction/{id}/edit', [App\Http\Controllers\TransactionController::class, 'edit']);
+Route::put('/transaction/{id}', [App\Http\Controllers\TransactionController::class, 'update']);
+Route::delete('/transaction/{transaction}', [App\Http\Controllers\TransactionController::class, 'destroy']);

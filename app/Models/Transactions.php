@@ -26,13 +26,18 @@ class Transactions extends Model
         JOIN transaction_details AS td ON t.id = td.transaction_id
         JOIN members AS m ON t.member_id = m.id
         JOIN books b on td.book_id = b.id
-        GROUP BY 1,2,3,4
-        LIMIT 10;";
+        GROUP BY 1,2,3,4,8
+        LIMIT 20;";
         return DB::select($query);
     }
 
     public function member()
     {
-        return $this->belongsTo('App\Models\member', 'member_id');
+        return $this->belongsTo('App\Models\Member', 'member_id');
+    }
+
+    public function transaction_detail()
+    {
+        return $this->hasMany('App\Models\TransactionDetail', 'transaction_id');
     }
 }

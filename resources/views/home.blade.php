@@ -112,13 +112,17 @@
         //untuk action
         {render: function (index, row, data, meta)   {
             return `
-            <a href="#" class="btn btn-warning btn-sm" onclick="controller.editData(event, ${meta.row})">
+            <a href="{{ url('transaction/${data.id}/edit') }}" class="btn btn-warning btn-sm">
                 Edit
             </a>
 
-            <a class="btn btn-danger btn-sm" onclick="controller.deleteData(event, ${data.id})">
-                Delete
-            </a>`;
+            <form action="{{ url('transaction/${data.id}') }}" method="POST">
+            @csrf
+            @method('DELETE')
+
+            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Are you sure you want to delete this item?')">Delete</button>
+            </form>;`
+
         }, orderable: false, width: '200px', class: 'text-center'},
     ];
 
@@ -142,45 +146,18 @@
                     url: _this.apiUrl,
                     type: 'GET',
                 },
-                columns
-            }).on('xhr', function () {
-                _this.datas = _this.table.ajax.json().data;
-            });
-        },
-        addData() {
-            //data table yajra
-        //     this.data = {};
-        //     this.actionUrl = '{{ url('authors') }}';
-        //     this.editStatus = false;
-        //   $('#modal-default').modal();
-            this.data = {};
-            this.editStatus = false;
-          $('#modal-default').modal();
-       },
-       editData(event, row) {
-           this.data = this.datas[row];
-           this.editStatus = true;
-           $('#modal-default').modal();
-       },
-       deleteData(event,id) {
-           if(confirm("Are you sure?")) {
-               $(event.target).parents('tr').remove();
-               axios.post(this.actionUrl+'/'+id, {_method: 'DELETE'}).then(response =>{
-                   alert('Data has been removed');
-               });
-           }
-       },
-       submitForm(event, id) {
-        event.preventDefault();
-        const _this = this;
-        var actionUrl = ! this.editStatus ? this.actionUrl : this.actionUrl+'/'+id;
-        axios.post(actionUrl, new FormData($(event.target)[0])).then(response =>{
-            $('#modal-default').modal('hide');
-            _this.table.ajax.reload();
-        });
-       },
-    }
-});
+                    columns }).on('xhr', function () {
+                    _this.datas = _this.table.ajax.json().data;
+                });
+                // columns: { "data":"id",
+                // "render": function(data, type, row, meta){
+                // if(type === 'display'){
+                //     data = '<a href="{{url('/transaction/{id}/edit')}} + data + '">' + row.Activity_Id + '</a>';
+                //     }
+                // return data;
+                // }
+    }}
+})
 
 </script>
 @endsection

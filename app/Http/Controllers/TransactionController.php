@@ -47,7 +47,8 @@ class TransactionController extends Controller
         // $member = DB::table('name')
         $members = Member::all();
         $books = Book::all();
-        return view('create', compact('members', 'books'));
+        $transactions = Transactions::all();
+        return view('create', compact('members', 'books', 'transactions'));
     }
 
     /**
@@ -114,24 +115,51 @@ class TransactionController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Transaction $transactions)
+    public function edit($id)
     {
-        //
+        $transaction = Transactions::findOrFail($id);
+        $members = Member::all();
+        $transactions = TransactionDetail::where('transaction_id', '=', $id)->join('transactions', 'transaction_details.transaction_id', '=', 'transactions.id')->get();
+        $books = Book::all();
+        return view('edit', compact('transaction', 'members', 'transactions', 'books'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, Transaction $transactions)
+    public function update(Request $request)
     {
-        //
+        $trx = Transactions::findOrFail($request->id);
+        $trx->member_id = $request->member;
+        $trx->date_start = $request->date_start;
+        $trx->date_end = $request->date_end;
+        $trx->status = 0;
+        $trx->update();
+
+
+        $trx_detail = new TransactionDetail;
+        $trx_detail->transaction_id = $trx->id;
+        $trx_detail->book_id = $request->book;
+        $trx_detail->qty = 1;
+        $trx_detail->update();
+
+        $book = Book::find($trx_detail->book_id);
+        $book->qty -= 1;
+        $book->update();
+
+        return redirect('home');
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy(Transaction $transactions)
+    public function destroy($id)
     {
-        //
+        $transaction_details = TransactionDetail::where('transaction_id', '=', $id);
+        $transaction_details->delete();
+        $transaction = Transactions::find($id);
+        $transaction->delete();
+
+        return redirect('home');
     }
 }
